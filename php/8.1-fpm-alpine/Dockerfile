@@ -5,8 +5,8 @@ ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 # Custom PHP requirements
 RUN set -x \
     && mkdir -p /data \
-    && apk --update add tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv libwebp-dev \
-    && apk add --virtual .phpize-deps $PHPIZE_DEPS libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev yaml-dev
+    && apk --update add tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libwebp libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv \
+    && apk add --virtual .phpize-deps $PHPIZE_DEPS libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev yaml-dev
 RUN docker-php-ext-configure gd \
       --with-freetype \
       --with-jpeg \

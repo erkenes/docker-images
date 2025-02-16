@@ -1,12 +1,12 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.3-fpm-alpine
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 # Custom PHP requirements
 RUN set -x \
     && mkdir -p /data \
-    && apk --update add tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv libwebp-dev git \
-    && apk add --virtual .phpize-deps $PHPIZE_DEPS linux-headers libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev yaml-dev
+    && apk --update add tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libwebp libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv git \
+    && apk add --virtual .phpize-deps $PHPIZE_DEPS linux-headers libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev yaml-dev
 RUN docker-php-ext-configure gd \
       --with-freetype \
       --with-jpeg \
@@ -29,11 +29,8 @@ RUN docker-php-ext-install \
     && docker-php-ext-install zip \
     && docker-php-ext-configure ldap --with-libdir=lib/
 RUN docker-php-ext-install ldap
-RUN pecl install imagick \
-      redis \
-      yaml \
-      uuid
-RUN docker-php-ext-enable imagick \
+RUN pecl install imagick redis yaml uuid \
+    && docker-php-ext-enable imagick \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable yaml \
     && docker-php-ext-enable uuid \
