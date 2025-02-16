@@ -29,7 +29,16 @@ RUN docker-php-ext-install \
     && docker-php-ext-install zip \
     && docker-php-ext-configure ldap --with-libdir=lib/
 RUN docker-php-ext-install ldap
-RUN pecl install imagick redis yaml uuid \
+
+# Imagick is installed from the archive
+ADD --chmod=0755 \
+  https://github.com/mlocati/docker-php-extension-installer/releases/download/2.6.3/install-php-extensions \
+  /usr/local/bin/
+# TODO: Use latest released version, after https://github.com/Imagick/imagick/issues/640 is fixed
+RUN install-php-extensions imagick/imagick@28f27044e435a2b203e32675e942eb8de620ee58
+# <<< End of Imagick installation
+
+RUN pecl install redis yaml uuid \
     && docker-php-ext-enable imagick \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable yaml \
