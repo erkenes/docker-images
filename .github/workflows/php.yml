@@ -52,15 +52,37 @@ jobs:
             erkenes/php
             ghcr.io/erkenes/php
 
-      - name: Build and push PHP ${{ matrix.version }} Image
+      - name: Build PHP ${{ matrix.version }} Docker Image
+        id: build-php
+        uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991
+        with:
+          context: ./php/${{ matrix.version }}-fpm-alpine
+          load: true
+          push: false
+          tags: erkenes/php:${{ matrix.version }}-fpm-alpine
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Scan for vulnerabilities
+        uses: crazy-max/ghaction-container-scan@v3
+        with:
+          image: erkenes/php:${{ matrix.version }}-fpm-alpine
+          dockerfile: ./php/${{ matrix.version }}-fpm-alpine/Dockerfile
+          annotations: true
+          severity_threshold: CRITICAL
+        env:
+          TRIVY_TIMEOUT: 10m
+          TRIVY_SCANNERS: 'vuln'
+
+      - name: Push PHP ${{ matrix.version }} Docker Image
+        id: push-php
         uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991
         with:
           context: ./php/${{ matrix.version }}-fpm-alpine
           push: true
           tags: erkenes/php:${{ matrix.version }}-fpm-alpine
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          sbom: false
+          provenance: false
 
       - name: Push image to GHCR
         run: |
