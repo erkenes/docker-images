@@ -1,9 +1,5 @@
 FROM php:8.2-fpm-alpine
 
-# Build arguments
-ARG PHP_REDIS_VERION="6.0.2"
-ARG PHP_YAML_VERION="2.2.3"
-
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 # Custom PHP requirements
@@ -34,8 +30,8 @@ RUN docker-php-ext-install \
     && docker-php-ext-configure ldap --with-libdir=lib/
 RUN docker-php-ext-install ldap
 RUN pecl install imagick \
-      redis-${PHP_REDIS_VERION} \
-      yaml-${PHP_YAML_VERION} \
+      redis \
+      yaml \
       uuid
 RUN docker-php-ext-enable imagick \
     && docker-php-ext-enable redis \
