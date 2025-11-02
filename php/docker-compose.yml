@@ -12,3 +12,7 @@ services:
   php8-3:
     build: ./8.3-fpm-alpine
     image: ghcr.io/erkenes/php:8.3-fpm-alpine
+
+  php8-4:
+    build: ./8.4-fpm-alpine
+    image: ghcr.io/erkenes/php:8.4-fpm-alpine
