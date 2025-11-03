@@ -55,7 +55,7 @@ jobs:
 
       - name: Build PHP ${{ matrix.version }} Docker Image
         id: build-php
-        uses: docker/build-push-action@1dc73863535b631f98b2378be8619f83b136f4a0
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
           context: ./php/${{ matrix.version }}-fpm-alpine
           load: true
@@ -76,7 +76,7 @@ jobs:
 
       - name: Push PHP ${{ matrix.version }} Docker Image
         id: push-php
-        uses: docker/build-push-action@1dc73863535b631f98b2378be8619f83b136f4a0
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
           context: ./php/${{ matrix.version }}-fpm-alpine
           push: true
