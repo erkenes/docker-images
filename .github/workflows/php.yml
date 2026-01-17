@@ -31,3 +31,6 @@ jobs:
       docker-hub-owner: erkenes
       ghcr-owner: erkenes
       login-to-dhi-registry: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
