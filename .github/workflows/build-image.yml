@@ -72,7 +72,6 @@ jobs:
             latest=${{ inputs.image-is-latest }}
           tags: |
             type=raw,value=${{ inputs.image-version }}
-            type=sha,format=short,prefix=sha-
 
       - name: Build Docker Image - ${{ inputs.image-version }}
         id: build
