@@ -12,11 +12,6 @@ on:
       - '.github/workflows/php.yml'
       - '.github/workflows/build-image.yml'
 
-env:
-  IMAGE_NAME: php
-  OWNER_DOCKER_HUB: erkenes
-  OWNER_GHCR: erkenes
-
 jobs:
   build:
     uses: ./.github/workflows/build-image.yml
@@ -30,9 +25,9 @@ jobs:
           - image: '8.4-fpm-alpine'
             latest: true
     with:
-      image-name: ${{ env.IMAGE_NAME }}
+      image-name: php
       image-version: ${{ matrix.version.image }}
       image-is-latest: ${{ matrix.version.latest }}
-      docker-hub-owner: ${{ env.OWNER_DOCKER_HUB }}
-      ghcr-owner: ${{ env.OWNER_GHCR }}
+      docker-hub-owner: erkenes
+      ghcr-owner: erkenes
       login-to-dhi-registry: true
