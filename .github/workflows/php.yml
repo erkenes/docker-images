@@ -30,7 +30,7 @@ jobs:
       image-is-latest: ${{ matrix.version.latest }}
       docker-hub-owner: erkenes
       ghcr-owner: erkenes
-      login-to-dhi-registry: true
+      login-to-dhi-registry: false
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

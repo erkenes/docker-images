@@ -71,7 +71,7 @@ jobs:
           flavor: |
             latest=${{ inputs.image-is-latest }}
           tags: |
-            type=semver,pattern={{version}},value=${{ inputs.image-version }}
+            type=raw,value=${{ inputs.image-version }}
             type=sha,format=short,prefix=sha-
 
       - name: Build Docker Image - ${{ inputs.image-version }}
