@@ -14,8 +14,8 @@ on:
 
 env:
   IMAGE_NAME: php
-  DOCKER_HUB_OWNER: erkenes
-  GHCR_OWNER: erkenes
+  OWNER_DOCKER_HUB: erkenes
+  OWNER_GHCR: erkenes
 
 jobs:
   build:
@@ -31,8 +31,8 @@ jobs:
             latest: true
     with:
       image-name: ${{ env.IMAGE_NAME }}
-      image-version: ${{ matrix.version }}
-      image-is-latest: ${{ matrix.latest }}
-      docker-hub-owner: ${{ env.DOCKER_HUB_OWNER }}
-      ghcr-owner: ${{ env.GHCR_OWNER }}
+      image-version: ${{ matrix.version.image }}
+      image-is-latest: ${{ matrix.version.latest }}
+      docker-hub-owner: ${{ env.OWNER_DOCKER_HUB }}
+      ghcr-owner: ${{ env.OWNER_GHCR }}
       login-to-dhi-registry: true
