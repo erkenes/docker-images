@@ -1,0 +1,32 @@
+name: Build Nginx image
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * 0'
+  push:
+    branches:
+      - main
+    paths:
+      - 'nginx/**'
+      - 'nginx.yml'
+      - '.github/workflows/build-image.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-image.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1-alpine'
+          - '1-alpine-dev'
+    with:
+      image-name: nginx
+      image-version: ${{ matrix.version }}
+      docker-hub-owner: erkenes
+      ghcr-owner: erkenes
+      login-to-dhi-registry: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
