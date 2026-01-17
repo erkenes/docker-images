@@ -19,15 +19,13 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - image: '8.1-fpm-alpine'
-          - image: '8.2-fpm-alpine'
-          - image: '8.3-fpm-alpine'
-          - image: '8.4-fpm-alpine'
-            latest: true
+          - '8.1-fpm-alpine'
+          - '8.2-fpm-alpine'
+          - '8.3-fpm-alpine'
+          - '8.4-fpm-alpine'
     with:
       image-name: php
-      image-version: ${{ matrix.version.image }}
-      image-is-latest: ${{ matrix.version.latest }}
+      image-version: ${{ matrix.version }}
       docker-hub-owner: erkenes
       ghcr-owner: erkenes
       login-to-dhi-registry: false
