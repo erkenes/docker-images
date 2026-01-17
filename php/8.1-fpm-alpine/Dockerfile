@@ -51,3 +51,7 @@ RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezon
 
 # Define working directory
 WORKDIR /data
+
+LABEL org.opencontainers.image.title="PHP 8.1 FPM Alpine [EOL]"
+LABEL org.opencontainers.image.description="[EOL] This image is based on a PHP version that has reached its official End-of-Life (EOL). It no longer receives security updates, bug fixes, or improvements. Using this image in production is strongly discouraged."
+LABEL status="eol"

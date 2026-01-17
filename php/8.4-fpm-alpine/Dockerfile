@@ -52,3 +52,7 @@ RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezon
 
 # Define working directory
 WORKDIR /data
+
+LABEL org.opencontainers.image.title="PHP 8.4 FPM Alpine"
+LABEL org.opencontainers.image.description="PHP 8.4 FPM Alpine Docker Image"
+LABEL status="stable"
