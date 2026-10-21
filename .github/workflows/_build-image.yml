@@ -160,7 +160,7 @@ jobs:
 
       - name: Build and Push Docker Image ${{ inputs.docker-image-tag }}
         if: steps.base_digest.outputs.exists != 'true' || inputs.force-build-image == true
-        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: ${{ inputs.build-context }}
           push: true
