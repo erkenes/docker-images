@@ -75,7 +75,7 @@ jobs:
 
       - name: Build Docker Image - ${{ inputs.image-version }}
         id: build
-        uses: docker/build-push-action@37abcedcc1da61a57767b7588cb9d03eb57e28b3
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: ./${{ inputs.image-name }}/${{ inputs.image-version }}
           push: false
@@ -96,7 +96,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub - ${{ inputs.image-version }}
         id: push
-        uses: docker/build-push-action@37abcedcc1da61a57767b7588cb9d03eb57e28b3
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: ./${{ inputs.image-name }}/${{ inputs.image-version }}
           push: true
