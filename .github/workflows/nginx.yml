@@ -1,32 +1,44 @@
-name: Build Nginx image
+name: nginx
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force Build (skip SHA check)'
+        type: boolean
+        default: false
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron: '0 2 * * *'
   push:
     branches:
       - main
     paths:
-      - 'nginx/**'
+      - '../../nginx/**'
       - 'nginx.yml'
-      - '.github/workflows/build-image.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/build-image.yml
+    uses: ./.github/workflows/_build-image.yml
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
         version:
-          - '1-alpine'
-          - '1-alpine-dev'
+          - "1-alpine"
+          - "1-alpine-dev"
     with:
-      image-name: nginx
-      image-version: ${{ matrix.version }}
-      docker-hub-owner: erkenes
-      ghcr-owner: erkenes
-      login-to-dhi-registry: true
+      force-build-image: ${{ inputs.force == true }}
+      docker-registry: ghcr.io
+      docker-image-owner: erkenes
+      docker-image-name: nginx
+      docker-image-tag: ${{ matrix.version }}
+      build-context: ./nginx/${{ matrix.version }}
+      vulnerability-scan-run: ${{ vars.DHI_NGINX__VUL_SCAN == 'true' }}
+      use-dhi-io: true
     secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      REGISTRY_USERNAME: ${{ github.actor }}
+      REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_PASSWORD }}
