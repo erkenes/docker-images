@@ -35,7 +35,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Log in to Docker Hub
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772
