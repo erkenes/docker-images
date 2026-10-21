@@ -1,17 +1,22 @@
 FROM php:8.4-fpm-alpine
 
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+# Build arguments
+ARG PHP_REDIS_VERSION="6.3.0"
+ARG PHP_YAML_VERSION="2.3.0"
+
+ENV LD_PRELOAD="/usr/lib/preloadable_libiconv.so php"
 
 # Custom PHP requirements
-RUN set -x \
+RUN --mount=type=bind,from=ghcr.io/php/pie:bin,source=/pie,target=/usr/local/bin/pie \
+    set -x \
     && mkdir -p /data \
-    && apk --update add tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libwebp libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv git \
-    && apk add --virtual .phpize-deps $PHPIZE_DEPS linux-headers libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev yaml-dev
-RUN docker-php-ext-configure gd \
+    && apk --update add patch tar curl openssl sed libbz2 libxslt bzip2 libzip libuuid postgresql-dev icu-dev icu-data-full gettext-dev curl-dev libxml2-dev openldap-dev libpng libwebp libjpeg-turbo yaml libuuid oniguruma-dev gnu-libiconv \
+    && apk add --virtual .phpize-deps $PHPIZE_DEPS linux-headers libxslt-dev libzip-dev bzip2-dev libmcrypt-dev imagemagick-dev libtool freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev yaml-dev unzip \
+    && docker-php-ext-configure gd \
       --with-freetype \
       --with-jpeg \
-      --with-webp
-RUN docker-php-ext-install \
+      --with-webp \
+    && docker-php-ext-install \
       gd \
       pdo_mysql \
       pdo_pgsql \
@@ -27,20 +32,15 @@ RUN docker-php-ext-install \
       sockets \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
-    && docker-php-ext-configure ldap --with-libdir=lib/
-RUN docker-php-ext-install ldap
-
-RUN pecl install redis yaml uuid imagick
-RUN docker-php-ext-enable imagick
-RUN docker-php-ext-enable redis
-RUN docker-php-ext-enable yaml
-RUN docker-php-ext-enable uuid
-RUN apk add --virtual .imagick-runtime-deps imagemagick
-RUN apk del .phpize-deps
-
-# install composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    && docker-php-ext-configure ldap --with-libdir=lib/ \
+    && docker-php-ext-install ldap \
+    && pie install --no-cache --no-system-dependencies-check imagick/imagick "phpredis/phpredis:${PHP_REDIS_VERSION}" "pecl/yaml:${PHP_YAML_VERSION}" pecl/uuid \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable redis \
+    && docker-php-ext-enable yaml \
+    && docker-php-ext-enable uuid \
+    && apk add --virtual .imagick-runtime-deps imagemagick \
+    && apk del .phpize-deps
 
 # Configure PHP
 RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini \
@@ -52,7 +52,3 @@ RUN echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezon
 
 # Define working directory
 WORKDIR /data
-
-LABEL org.opencontainers.image.title="PHP 8.4 FPM Alpine"
-LABEL org.opencontainers.image.description="PHP 8.4 FPM Alpine Docker Image"
-LABEL status="stable"

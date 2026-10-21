@@ -1,34 +1,44 @@
-name: Build PHP Image
+name: php
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force Build (skip SHA check)'
+        type: boolean
+        default: false
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron: '0 2 * * 0'
   push:
     branches:
       - main
     paths:
       - 'php/**'
       - '.github/workflows/php.yml'
-      - '.github/workflows/build-image.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/build-image.yml
+    uses: ./.github/workflows/_build-image.yml
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
         version:
-          - '8.1-fpm-alpine'
-          - '8.2-fpm-alpine'
-          - '8.3-fpm-alpine'
-          - '8.4-fpm-alpine'
+          - "8.3-fpm-alpine"
+          - "8.4-fpm-alpine"
+          - "8.5-fpm-alpine"
     with:
-      image-name: php
-      image-version: ${{ matrix.version }}
-      docker-hub-owner: erkenes
-      ghcr-owner: erkenes
-      login-to-dhi-registry: false
+      force-build-image: ${{ inputs.force == true }}
+      docker-registry: ghcr.io
+      docker-image-owner: erkenes
+      docker-image-name: php
+      docker-image-tag: ${{ matrix.version }}
+      build-context: ./php/${{ matrix.version }}
+      vulnerability-scan-run: ${{ vars.PHP__VUL_SCAN == 'true' }}
+      use-dhi-io: false
+      qemu-platforms: 'linux/arm64'
     secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      REGISTRY_USERNAME: ${{ github.actor }}
+      REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
